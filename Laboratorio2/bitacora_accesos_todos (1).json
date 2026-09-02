@@ -1,0 +1,38 @@
+[
+ {
+  "usuario": "admin",
+  "fechaHora": "2026-09-02T17:11:40.994",
+  "exitoso": true,
+  "origen": "web"
+ },
+ {
+  "usuario": "Cristopher@gmail.com",
+  "fechaHora": "2026-09-02T17:12:11.529",
+  "exitoso": false,
+  "origen": "web"
+ },
+ {
+  "usuario": "Raquel@gmail.com",
+  "fechaHora": "2026-09-02T17:12:21.125",
+  "exitoso": false,
+  "origen": "web"
+ },
+ {
+  "usuario": "admin",
+  "fechaHora": "2026-09-02T17:12:29.027",
+  "exitoso": true,
+  "origen": "web"
+ },
+ {
+  "usuario": "Admin",
+  "fechaHora": "2026-09-02T17:12:36.484",
+  "exitoso": false,
+  "origen": "web"
+ },
+ {
+  "usuario": "Invitado@hotmail.com",
+  "fechaHora": "2026-09-02T17:12:54.427",
+  "exitoso": false,
+  "origen": "web"
+ }
+]
