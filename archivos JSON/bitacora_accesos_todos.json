@@ -1,0 +1,32 @@
+[
+ {
+  "usuario": "admin@gmail.com",
+  "fechaHora": "2026-09-07T22:31:17.281",
+  "exitoso": "AUTORIZADO",
+  "origen": "web"
+ },
+ {
+  "usuario": "Admin@gmail.com",
+  "fechaHora": "2026-09-07T22:31:29.600",
+  "exitoso": "RECHAZADO",
+  "origen": "web"
+ },
+ {
+  "usuario": "Cristopher@gmail.com",
+  "fechaHora": "2026-09-07T22:31:47.300",
+  "exitoso": "RECHAZADO",
+  "origen": "web"
+ },
+ {
+  "usuario": "admin@gmail.com",
+  "fechaHora": "2026-09-07T22:32:02.607",
+  "exitoso": "RECHAZADO",
+  "origen": "web"
+ },
+ {
+  "usuario": "admin@gmail.com",
+  "fechaHora": "2026-09-07T22:32:09.781",
+  "exitoso": "AUTORIZADO",
+  "origen": "web"
+ }
+]

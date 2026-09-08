@@ -14,7 +14,7 @@ class AccessRecord {
   Map<String, dynamic> toJson() => {
     'usuario': user,
     'fechaHora': dateTime.toIso8601String(),
-    'exitoso': success,
+    'resultado': success ? 'AUTORIZADO' : 'RECHAZADO',
     'origen': origin,
   };
 
@@ -22,7 +22,7 @@ class AccessRecord {
     return AccessRecord(
       user: json['usuario'] as String,
       dateTime: DateTime.parse(json['fechaHora'] as String),
-      success: json['exitoso'] as bool,
+      success: json['resultado'] == 'AUTORIZADO',
       origin: json['origen'] as String? ?? 'Web',
     );
   }
