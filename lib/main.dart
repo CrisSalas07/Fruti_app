@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
     final usuario = usuarioController.text.trim();
     final password = passwordController.text;
 
-    final exitoso = usuario == 'admin' && password == '1234';
+    final exitoso = usuario == 'admin@gmail.com' && password == '123456';
 
     logService.add(
       AccessRecord(
@@ -201,6 +201,10 @@ class _LoginPageState extends State<LoginPage> {
                         return 'Por favor ingrese su usuario';
                       }
 
+                      if (!value.contains('@')) {
+                        return 'Por favor ingrese un usuario válido';
+                      }
+
                       return null;
                     },
                   ),
@@ -223,6 +227,9 @@ class _LoginPageState extends State<LoginPage> {
                         return 'Por favor ingrese su contraseña';
                       }
 
+                      if (value.length < 6) {
+                        return 'La contraseña debe tener al menos 6 caracteres';
+                      }
                       return null;
                     },
                   ),
