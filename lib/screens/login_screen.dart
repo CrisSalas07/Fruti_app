@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:file_selector/file_selector.dart';
-import 'package:web/web.dart' as web;
 import 'package:frutiapp_web/catalog.dart';
 import 'package:frutiapp_web/models/access_record.dart';
-import 'package:frutiapp_web/service/access_log_service.dart';
-import 'package:frutiapp_web/service/preferences_service.dart';
+import 'package:frutiapp_web/services/access_log_service.dart';
+import 'package:frutiapp_web/services/preferences_service.dart';
+import 'package:frutiapp_web/screens/binnacle_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,19 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   final logService = AccessLogService();
   final preferencesService = PreferencesService();
-
-  String filter = 'all';
-  int get totalRecords => logService.records.length;
-
-  int get totalSuccess => logService.records.where((r) => r.success).length;
-
-  double get successRate {
-    if (totalRecords == 0) {
-      return 0;
-    }
-
-    return (totalSuccess / totalRecords) * 100;
-  }
 
   bool remember = false;
   bool obscurePassword = true;
@@ -72,76 +57,6 @@ class _LoginPageState extends State<LoginPage> {
         const SnackBar(content: Text('Usuario o contraseña incorrectos')),
       );
     }
-  }
-
-  Future<void> importBitacora() async {
-    const typeGroup = XTypeGroup(
-      label: 'JSON',
-      extensions: ['json'],
-      mimeTypes: ['application/json'],
-    );
-
-    final XFile? file = await openFile(acceptedTypeGroups: [typeGroup]);
-
-    if (file == null) return;
-
-    try {
-      final content = await file.readAsString();
-
-      logService.importJson(content);
-
-      setState(() {});
-    } on FormatException catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('JSON inválido: ${e.message}')));
-    } catch (_) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No se pudo leer el archivo')),
-      );
-    }
-  }
-
-  void downloadJson(String contenido, String nombreArchivo) {
-    final base64 = base64Encode(utf8.encode(contenido));
-
-    web.HTMLAnchorElement()
-      ..href = 'data:application/json;base64,$base64'
-      ..setAttribute('download', nombreArchivo)
-      ..click();
-  }
-
-  void exportBitacora() {
-    final data = filteredRecords.map((r) => r.toJson()).toList();
-
-    final content = const JsonEncoder.withIndent(' ').convert(data);
-
-    String nameFile;
-
-    if (filter == 'Success') {
-      nameFile = 'bitacora_accesos_exitosos.json';
-    } else if (filter == 'Failed') {
-      nameFile = 'bitacora_accesos_fallidos.json';
-    } else {
-      nameFile = 'bitacora_accesos_todos.json';
-    }
-
-    downloadJson(content, nameFile);
-  }
-
-  List<AccessRecord> get filteredRecords {
-    if (filter == 'Success') {
-      return logService.records.where((r) => r.success).toList();
-    }
-
-    if (filter == 'Failed') {
-      return logService.records.where((r) => !r.success).toList();
-    }
-
-    return logService.records;
   }
 
   @override
@@ -287,79 +202,24 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text('Ingresar'),
                     ),
                   ),
-                  const SizedBox(height: 30),
 
-                  const Text(
-                    'Bitácora de accesos',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  DropdownButton<String>(
-                    value: filter,
-                    items: const [
-                      DropdownMenuItem(value: 'all', child: Text('Todos')),
-                      DropdownMenuItem(
-                        value: 'Success',
-                        child: Text('Exitosos'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Failed',
-                        child: Text('Fallidos'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      if (value == null) return;
+                  const SizedBox(height: 12),
 
-                      setState(() {
-                        filter = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-
-                  Text('Total de accesos: $totalRecords'),
-
-                  Text(
-                    'Tasa de accesos exitosos: ${successRate.toStringAsFixed(1)}%',
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: filteredRecords.length,
-                    itemBuilder: (context, index) {
-                      final r = filteredRecords[index];
-
-                      return ListTile(
-                        leading: Icon(
-                          r.success ? Icons.check_circle : Icons.cancel,
-                        ),
-                        title: Text(
-                          r.user.isEmpty ? '(sin usuario)' : r.user,
-                        ),
-                        subtitle: Text(r.dateTime.toString()),
-                        trailing: Text(r.success ? 'OK' : 'FALLÓ'),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: exportBitacora,
-                        icon: const Icon(Icons.download),
-                        label: const Text('Exportar JSON'),
-                      ),
-
-                      const SizedBox(width: 12),
-
-                      OutlinedButton.icon(
-                        onPressed: importBitacora,
-                        icon: const Icon(Icons.upload_file),
-                        label: const Text('Importar JSON'),
-                      ),
-                    ],
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                BinnacleScreen(logService: logService),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.list_alt),
+                      label: const Text('Ver bitácora'),
+                    ),
                   ),
                 ],
               ),
