@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frutiapp_web/access_record.dart';
+import 'package:frutiapp_web/models/access_record.dart';
 
 class AccessLogService {
   final List<AccessRecord> _records = [];
